@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Halaman Login</title>
+  <!-- Menggunakan Tailwind CSS untuk styling instan yang modern -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Tambahan animasi halus */
+    .input-focus-effect:focus {
+        transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-slate-100 to-slate-200 min-h-screen flex items-center justify-center p-4">
+
+  <!-- Container Kartu Login -->
+  <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-slate-100">
+      
+    <!-- Header / Bagian Atas -->
+    <div class="bg-blue-600 p-8 text-center">
+      <h1 class="text-3xl font-bold text-white mb-2">Selamat Datang</h1>
+      <p class="text-blue-100 text-sm">Silakan masukkan detail akun Anda</p>
+    </div>
+
+    <!-- Bagian Form -->
+    <div class="p-8">
+      <form action="/default-action" method="post">
+          
+        <!-- Input Username -->
+        <div class="mb-6">
+          <label class="block text-gray-700 text-sm font-semibold mb-2" for="InUsName">
+              Username
+          </label>
+          <input 
+              class="shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 input-focus-effect" 
+              name="username" 
+              type="text" 
+              placeholder="Masukkan username Anda"
+              required
+          >
+        </div>
+
+        <!-- Input Password -->
+        <div class="mb-8">
+          <label class="block text-gray-700 text-sm font-semibold mb-2" for="InPsWord">
+            Password
+          </label>
+          <input 
+            class="shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 input-focus-effect" 
+            name="password" 
+            type="password" 
+            placeholder="Masukkan password Anda"
+            required
+          >
+        </div>
+
+        <!-- Tombol Submit -->
+        <div class="flex items-center justify-between">
+          <button 
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-300 transform active:scale-95 shadow-lg shadow-blue-500/30" 
+            id="submit" 
+            formaction="/login"
+            type="submit">
+            Masuk
+          </button>
+        </div>
+        <div class="flex items-center justify-between m-5">
+          <button 
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-300 transform active:scale-95 shadow-lg shadow-blue-500/30" 
+            id="submit" 
+            formaction="/tambah"
+            type="submit">
+            Daftar
+          </button>
+        </div>
+      </form>
+      
+      <p class="text-center text-gray-400 text-xs mt-6">
+        &copy; 2024 Perusahaan Anda. Hak cipta dilindungi.
+      </p>
+    </div>
+  </div>
+
+  <!-- Area Script untuk Logika Anda -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io()
+
+    const btn = document.getElementById('submit')
+
+    btn.addEventListener('click', () => {
+      socket.emit("login", true)
+    })
+    
+  </script>
+</body>
+</html>

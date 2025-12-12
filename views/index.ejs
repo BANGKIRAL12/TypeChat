@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Chat Dashboard</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome untuk Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Mengatur tinggi navbar fix 50px sesuai permintaan */
+        .custom-navbar {
+            height: 50px;
+        }
+        /* Mengatur tinggi konten agar memenuhi sisa layar */
+        .main-container {
+            height: calc(100vh - 50px);
+        }
+        /* Scrollbar kustom agar lebih rapi */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .balon-chat {
+            background-color: aqua;
+            border:1px solid black;
+        }
+        @media screen and (max-width: 750px) {
+            .container-user-list {
+                width: 100vh;
+            }
+            .container-chat-box {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 overflow-hidden">
+
+    <!-- 1. Navbar (Tinggi 50px) -->
+    <nav class="custom-navbar bg-blue-600 text-white flex items-center px-6 shadow-md z-10 relative justify-between">
+        <div class="font-bold text-lg flex items-center gap-2">
+            <i class="fa-solid fa-comments"></i> ChatApp
+        </div>
+        <div class="text-sm opacity-80">
+            <%= myUser %>
+        </div>
+    </nav>
+
+    <!-- Container Utama (Sidebar + Konten) -->
+    <div class="flex main-container">
+        
+        <!-- 2. Control Bar / Sidebar Kiri (Daftar User) -->
+        <aside class="w-80 bg-white border-r border-gray-200 flex flex-col" id="control-bar">
+            <!-- Header Sidebar -->
+            <div class="p-4 border-b border-gray-100 bg-gray-50">
+                <h2 class="font-semibold text-gray-700">Daftar Pengguna</h2>
+                <div class="mt-2 relative">
+                    <input type="text" placeholder="Cari user..." class="w-full pl-8 pr-3 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+                    <i class="fa-solid fa-search absolute left-2.5 top-2 text-gray-400 text-xs"></i>
+                </div>
+            </div>
+
+            <!-- List Container (Scrollable) -->
+            <div id="userListContainer" class="flex-1 overflow-y-auto p-3 space-y-2">
+                <!-- User items akan di-generate oleh JavaScript di bawah -->
+                <% for (let user of users) { %>
+                  <div class="group p-3 rounded-lg cursor-pointer hover:bg-blue-50 transition border border-transparent hover:border-blue-100 flex items-center gap-3" onclick="selectUser('<%= user.username %>')">
+                    <div class="relative">
+                      <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold text-xs group-hover:bg-blue-200 group-hover:text-blue-700 transition">
+                          
+                      </div>
+                      <div class="absolute bottom-0 right-0 w-3 h-3 <%= status.color %> border-2 border-white rounded-full"></div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="flex justify-between items-baseline mb-0.5">
+                        <h4 class="text-sm font-semibold text-gray-800 truncate group-hover:text-blue-700"><%= user.username %></h4>
+                        <span class="text-[10px] text-gray-400">10:30</span>
+                      </div>
+                    </div>
+                  </div>
+                <% } %>
+            </div>
+        </aside>
+
+        <!-- 3. Area Kanan (Chat Box & Input) -->
+        <main class="flex-1 flex flex-col bg-slate-50 relative" id="chat--box">
+            
+            <!-- Header Chat (Opsional, nama user yang dipilih) -->
+            <div class="h-14 bg-white border-b border-gray-200 flex items-center px-6 justify-between shadow-sm">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-sm" id="activeUserAvatar">?</div>
+                    <div>
+                        <h3 class="font-semibold text-gray-800" id="activeUserName">Pilih Pengguna</h3>
+                        <p class="text-xs text-green-500 flex items-center gap-1" id="activeUserStatus"><span class="w-2 h-2 rounded-full bg-gray-300"></span> Offline</p>
+                    </div>
+                </div>
+                <button class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+            </div>
+
+            <!-- Area Kotak Kosong (Chat History) -->
+            <div id="chatDisplay" class="flex-1 overflow-y-scroll p-6 space-y-4">
+                <!-- Placeholder Kosong -->
+                <div class="h-full flex flex-col items-center justify-center text-gray-400 opacity-50">
+                    <i class="fa-regular fa-paper-plane text-6xl mb-4"></i>
+                    <p>Belum ada pesan dipilih</p>
+                </div>
+            </div>
+
+            <div id="attachmentMenu" class="hidden bg-gray-100 border-t border-gray-200 p-6 slide-up transition-all duration-300">
+                <div class="grid grid-cols-4 sm:grid-cols-6 gap-4 justify-items-center">
+                    <!-- Tombol Document -->
+                    <button class="flex flex-col items-center gap-2 group w-full">
+                        <div class="w-12 h-12 rounded-full bg-indigo-500 text-white flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition">
+                            <i class="fa-solid fa-file-lines"></i>
+                        </div>
+                        <span class="text-xs text-gray-600 font-medium">Dokumen</span>
+                    </button>
+                    <!-- Tombol Galeri -->
+                    <button class="flex flex-col items-center gap-2 group w-full">
+                        <div class="w-12 h-12 rounded-full bg-pink-500 text-white flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition">
+                            <i class="fa-solid fa-image"></i>
+                        </div>
+                        <span class="text-xs text-gray-600 font-medium">Galeri</span>
+                    </button>
+                    <!-- Tombol Kamera -->
+                    <button class="flex flex-col items-center gap-2 group w-full">
+                        <div class="w-12 h-12 rounded-full bg-rose-500 text-white flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition">
+                            <i class="fa-solid fa-camera"></i>
+                        </div>
+                        <span class="text-xs text-gray-600 font-medium">Kamera</span>
+                    </button>
+                    <!-- Tombol Lokasi -->
+                    <button class="flex flex-col items-center gap-2 group w-full">
+                        <div class="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <span class="text-xs text-gray-600 font-medium">Lokasi</span>
+                    </button>
+                    <!-- Tombol Kontak -->
+                    <button class="flex flex-col items-center gap-2 group w-full">
+                        <div class="w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <span class="text-xs text-gray-600 font-medium">Kontak</span>
+                    </button>
+                    <!-- Tombol Audio -->
+                    <button class="flex flex-col items-center gap-2 group w-full">
+                        <div class="w-12 h-12 rounded-full bg-orange-500 text-white flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition">
+                            <i class="fa-solid fa-headphones"></i>
+                        </div>
+                        <span class="text-xs text-gray-600 font-medium">Audio</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bagian Bawah: Input & Tombol Kirim -->
+            <div class="bg-white p-4 border-t border-gray-200">
+                <form id="messageForm" class="flex gap-3 items-center" onsubmit="event.preventDefault()">
+                    <div class="flex-1 relative">
+                        <textarea 
+                        id="messageInput"
+                        rows="1" 
+                        class="w-full bg-gray-100 border-0 rounded-xl px-4 py-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:bg-white transition resize-none" 
+                        placeholder="Ketik pesan Anda di sini..."></textarea>
+                    </div>
+                    <button 
+                        type="button" 
+                        id="attachmentBtn"
+                        class="text-gray-500 hover:text-gray-700 hover:bg-gray-100 p-3 rounded-full transition duration-200 flex items-center justify-center h-full mb-1">
+                        <i class="fa-solid fa-paperclip text-xl transform -rotate-45"></i>
+                    </button>
+                    <button 
+                        type="submit" 
+                        class="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6 py-3 font-semibold shadow-lg shadow-blue-500/30 transition transform active:scale-95 flex items-center gap-2">
+                        <span><i id="btnSubmit" class="fa-solid fa-paper-plane"></i></span>
+                    </button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io()
+        const urlParams = new URLSearchParams(window.location.search);
+        const myuser = urlParams.get('username');
+        const myusername = '<%= myUser %>'
+        const loginKey = '<%= login %>'
+
+        let login = false
+        if (loginKey == 'true') {
+            login = true
+        }
+
+        let userSelect;
+
+        const now = new Date()
+        const hours = now.getHours()
+        const minute = now.getMinutes()
+
+        sessionStorage.setItem('login', `${login}`)
+        let isLogin = localStorage.getItem('login')
+        // isLogin = Boolean(isLogin)
+
+        function inLogin() {
+            if (isLogin == 'true') {
+                console.log('hyyyy')
+            }
+            else {
+                console.log('hecker')
+                window.location.replace("/");
+            }
+        }
+        inLogin()
+
+
+        const controlBar = document.getElementById('control-bar')
+        const chat_box = document.getElementById('chat--box')
+        const mediaQuery = window.matchMedia('(max-width: 750px)')
+
+        // Fungsi menampilkan Chat
+        function showChatView() {
+            // Hanya jalankan logika toggle jika di layar kecil (mobile)
+            if (window.innerWidth < 768) {
+                controlBar.classList.add('w-full')
+                controlBar.classList.add('hidden')
+                chat_box.classList.remove('hidden')
+            }
+        }
+
+        // Fungsi menampilkan List User (Reset)
+        function showListView() {
+            // Hanya jalankan logika toggle jika di layar kecil (mobile)
+            if (window.innerWidth < 768) {
+                controlBar.classList.add('w-full')
+                controlBar.classList.remove('hidden')
+                chat_box.classList.add('hidden')
+                
+                // Tutup attachment menu saat kembali
+                attachmentMenu.classList.add('hidden');
+                attachmentBtn.classList.remove('bg-gray-200', 'text-blue-600');
+            }
+        }
+
+        // Listener saat tombol "Back" browser/HP ditekan (popstate event)
+        window.addEventListener('popstate', (event) => {
+            // Jika state mengandung page: 'chat', tampilkan chat
+            if (event.state && event.state.page === 'chat') {
+                showChatView();
+            } else {
+                // Jika tidak (kembali ke awal), tampilkan list
+                showListView();
+            }
+        });
+
+        // const toggleDevices = () => {
+        //     if (mediaQuery.matches) {
+        //         controlBar.classList.remove('w-80')
+        //         controlBar.classList.add('w-full')
+        //         chat_box.classList.add('hidden')
+        //     }
+        //     else {
+        //         controlBar.classList.remove('w-full')
+        //         controlBar.classList.add('w-80')
+        //         chat_box.classList.remove('hidden')
+        //     }
+        // }
+
+        // mediaQuery.addListener(toggleDevices)
+        // toggleDevices()
+
+
+        // Referensi Elemen
+        const userListContainer = document.getElementById('userListContainer');
+        const activeUserName = document.getElementById('activeUserName');
+        const activeUserAvatar = document.getElementById('activeUserAvatar');
+        const activeUserStatus = document.getElementById('activeUserStatus');
+        const chatDisplay = document.getElementById('chatDisplay');
+        const messageForm = document.getElementById('messageForm');
+        const messageInput = document.getElementById('messageInput');
+        const btnSubmit = document.getElementById('btnSubmit')
+
+        const attachmentBtn = document.getElementById('attachmentBtn');
+        const attachmentMenu = document.getElementById('attachmentMenu');
+
+        attachmentBtn.addEventListener('click', () => {
+            // Toggle visibility class
+            attachmentMenu.classList.toggle('hidden');
+            
+            // Toggle icon color/state (optional)
+            if (!attachmentMenu.classList.contains('hidden')) {
+                attachmentBtn.classList.add('bg-gray-200', 'text-blue-600');
+                // Scroll chat to bottom to accommodate view change if necessary
+                chatDisplay.scrollTop = chatDisplay.scrollHeight;
+            } else {
+                attachmentBtn.classList.remove('bg-gray-200', 'text-blue-600');
+            }
+        });
+
+        // --- 3. Fungsi Saat User Dipilih ---
+        function selectUser(user) {
+            // // Update Header
+            activeUserName.textContent = user;
+
+            controlBar.classList.add('hidden')
+            chat_box.classList.remove('hidden')
+            
+            chatDisplay.innerHTML = `
+                <div class="flex justify-center my-4"><span class="bg-gray-200 text-gray-500 text-xs px-3 py-1 rounded-full">Hari ini</span></div>
+                <div id="chat-box" class="flex flex-col space-y-2">
+                    <!-- Pesan Masuk Dummy -->
+                    <!-- <div class="self-start bg-white border border-gray-200 rounded-lg rounded-tl-none py-2 px-4 max-w-sm shadow-sm">
+                        <p class="text-sm text-gray-800">${user.lastMsg}</p>
+                        <span class="text-[10px] text-gray-400 mt-1 block">10:30</span>
+                    </div> -->
+                </div>
+            `;
+            const data = {
+                userSelect: user,
+                myUser: myuser
+            }
+            console.log('user di pilih')
+            socket.emit("selectUser", data)
+
+            userSelect = user
+
+            chatDisplay.scrollTop = chatDisplay.scrollHeight;
+
+            if (window.innerWidth < 768) {
+                // Tambahkan state baru ke history browser agar tombol back berfungsi
+                history.pushState({ page: 'chat' }, '', '#chat');
+                showChatView();
+            }
+        }
+        socket.on("selectUser1", (data) => {
+            console.log(data)
+            loadData(data.mydb)
+        })
+
+        
+
+        // // --- 4. Logika Kirim Pesan ---
+        messageForm.addEventListener('submit', function() {
+            const text = messageInput.value.trim();
+            if (text) {
+                const data = {
+                    myUser: myuser,
+                    userSelect: userSelect,
+                    message: {
+                        waktu: hours + ':' + minute,
+                        pengirim: myuser,
+                        message: text
+                    }
+                }
+                console.log('user di pilih')
+                socket.emit("message", data)
+                
+                messageInput.value = '';
+                chatDisplay.scrollTop = chatDisplay.scrollHeight;
+            }
+        });
+        socket.on("message", (data) => {
+            console.log(data)
+            loadData(data.mydb)
+            userSelect(userSelect)
+        })
+        
+        function loadData(mydb) {
+            const msg = JSON.parse(JSON.stringify(mydb));
+            
+            let chatBox = document.getElementById('chat-box')
+            chatBox.innerHTML = ''
+            msg.forEach((a) => {
+                
+                const balon = document.createElement('div')
+                const balonChat = document.createElement('div')
+                if (a.pengirim == myuser) {
+                    balon.classList.add('flex', 'justify-end')
+                    balonChat.classList.add('bg-blue-600', 'text-white', 'p-3', 'rounded-2xl', 'rounded-tr-none', 'shadow-sm', 'max-w-[75%]')
+                    balonChat.innerHTML = `
+                    <p class="text-sm">${JSON.parse(JSON.stringify(a.message))}</p>
+                    <span class="text-xs text-blue-200 mt-1 block text-right">${JSON.parse(JSON.stringify(a.waktu))}</span>
+                    `
+                }
+                else {
+                    balon.classList.add('flex', 'justify-start')
+                    balonChat.classList.add('bg-white', 'text-gray-800', 'p-3', 'rounded-2xl', 'rounded-tl-none', 'shadow-sm', 'max-w-[75%]')
+                    balonChat.innerHTML = `
+                    <p class="text-sm">${JSON.parse(JSON.stringify(a.message))}</p>
+                    <span class="text-xs text-gray-400 mt-1 block">${JSON.parse(JSON.stringify(a.waktu))}</span>
+                    `
+                }
+                balon.appendChild(balonChat)
+                chatBox.appendChild(balon)
+            })
+
+        }
+
+        window.onload = function() {
+            var objDiv = document.getElementById("chatDisplay");
+            // Mengatur posisi scroll vertical (scrollTop) ke tinggi total konten (scrollHeight)
+            objDiv.scrollTop = objDiv.scrollHeight;
+        }
+
+        function scrollToBottom() {
+            // 1. Ambil elemen wadah
+            const chatBox = document.getElementById('chat-box');
+
+            // 2. Gunakan properti scrollHeight untuk menemukan posisi paling bawah
+            // chatBox.scrollTop = chatBox.scrollHeight;
+            
+            // Opsi Smooth Scroll (dengan animasi halus)
+            chatBox.scrollTo({
+                top: chatBox.scrollHeight,
+                behavior: 'smooth' 
+            });
+        }
+        
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 750) { // md breakpoint
+                // Reset ke tampilan desktop (dua kolom)
+                controlBar.classList.remove('hidden');
+                controlBar.classList.remove('w-full');
+                controlBar.classList.add('w-80');
+                chat_box.classList.remove('hidden');
+            } else {
+                // Jika resize ke mobile, cek history state atau default ke list
+                if (history.state && history.state.page === 'chat') {
+                    showChatView();
+                } else {
+                    showListView();
+                }
+            }
+        });
+
+
+
+        // // Jalankan render awal
+        // renderUserList();
+
+    </script>
+</body>
+</html>
