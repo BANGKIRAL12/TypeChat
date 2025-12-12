@@ -8,6 +8,7 @@ const XLSX = require('xlsx')
 const fs = require('fs')
 
 const database = require('./database')
+const port = process.env.PORT || 3000;
 
 const app = express();
 const http = require('http')
@@ -276,6 +277,7 @@ io.on("connection", (socket) => {
   })
 })
 
-server.listen(3300, () => {
+app.listen(port, () => {
   console.log("server ready....")
+
 });
