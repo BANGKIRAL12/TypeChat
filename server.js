@@ -24,10 +24,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const db = mysql.createConnection({
-  host: "localhost",
-  database: "bk-studio_db",
-  user: "root",
-  password: ""
+  host: "2z2d2x.h.filess.io",
+  database: "bkstudio_db_sheepeyeup",
+  user: "bkstudio_db_sheepeyeup",
+  password: "bc3db81e45df11fd0b82535fdd8653cceb29d12e"
 });
 
 let myUserName = ""
@@ -281,4 +281,5 @@ server.listen(port, () => {
   console.log("server ready....")
 
 });
+
 
