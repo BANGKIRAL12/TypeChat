@@ -24,10 +24,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const db = mysql.createConnection({
-  host: "2z2d2x.h.filess.io",
-  database: "bkstudio_db_sheepeyeup",
-  user: "bkstudio_db_sheepeyeup",
-  password: "bc3db81e45df11fd0b82535fdd8653cceb29d12e"
+  host: '2z2d2x.h.filess.io', // Ganti dengan host Filess.io Anda
+  user: 'bkstudio_db_sheepeyeup',         // Ganti dengan username Anda
+  password: 'bc3db81e45df11fd0b82535fdd8653cceb29d12e',     // Ganti dengan password Anda
+  database: 'bkstudio_db_sheepeyeup', // Ganti dengan nama database Anda
+  port: 3307                   // Port default MySQL, pastikan sesuai di Filess.io
 });
 
 let myUserName = ""
@@ -281,5 +282,6 @@ server.listen(port, () => {
   console.log("server ready....")
 
 });
+
 
 
