@@ -37,7 +37,7 @@
         }
         @media screen and (max-width: 750px) {
             .container-user-list {
-                width: 100vh;
+                width: 100vw;
             }
             .container-chat-box {
                 display: none;
@@ -48,11 +48,11 @@
 <body class="bg-gray-100 overflow-hidden">
 
     <!-- 1. Navbar (Tinggi 50px) -->
-    <nav class="custom-navbar bg-blue-600 text-white flex items-center px-6 shadow-md z-10 relative justify-between">
-        <div class="font-bold text-lg flex items-center gap-2">
+    <nav class="custom-navbar bg-[#1E1E1E] text-white flex items-center px-6 shadow-md z-10 relative justify-between">
+        <div class="font-bold text-lg flex items-center gap-2 text-[#FF6F00]">
             <i class="fa-solid fa-comments"></i> ChatApp
         </div>
-        <div class="text-sm opacity-80">
+        <div class="text-sm text-[#E0E0E0] opacity-80">
             <%= myUser %>
         </div>
     </nav>
@@ -61,13 +61,13 @@
     <div class="flex main-container">
         
         <!-- 2. Control Bar / Sidebar Kiri (Daftar User) -->
-        <aside class="w-80 bg-white border-r border-gray-200 flex flex-col" id="control-bar">
+        <aside class="w-80 bg-[#121212] border-r border-[#FF6D1F] flex flex-col" id="control-bar">
             <!-- Header Sidebar -->
-            <div class="p-4 border-b border-gray-100 bg-gray-50">
-                <h2 class="font-semibold text-gray-700">Daftar Pengguna</h2>
+            <div class="p-4 border-b border-gray-100 bg-[#2C2C2C]">
+                <h2 class="font-semibold text-[#E0E0E0]">Daftar Pengguna</h2>
                 <div class="mt-2 relative">
                     <input type="text" placeholder="Cari user..." class="w-full pl-8 pr-3 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
-                    <i class="fa-solid fa-search absolute left-2.5 top-2 text-gray-400 text-xs"></i>
+                    <i class="fa-solid fa-search absolute left-2.5 top-2 text-[#FFA000] text-xs"></i>
                 </div>
             </div>
 
@@ -75,17 +75,17 @@
             <div id="userListContainer" class="flex-1 overflow-y-auto p-3 space-y-2">
                 <!-- User items akan di-generate oleh JavaScript di bawah -->
                 <% for (let user of users) { %>
-                  <div class="group p-3 rounded-lg cursor-pointer hover:bg-blue-50 transition border border-transparent hover:border-blue-100 flex items-center gap-3" onclick="selectUser('<%= user.username %>')">
+                  <div class="group p-3 rounded-lg cursor-pointer hover:bg-[#252525] hover:border-l-2 hover:border-l-[#FF6F00] transition border border-transparent flex items-center gap-3 i_u" onclick="selectUser('<%= user.username %>', this)">
                     <div class="relative">
                       <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold text-xs group-hover:bg-blue-200 group-hover:text-blue-700 transition">
                           
                       </div>
-                      <div class="absolute bottom-0 right-0 w-3 h-3 <%= status.color %> border-2 border-white rounded-full"></div>
+                      <div class="absolute bottom-0 right-0 w-3 h-3 status border-2 border-white rounded-full"></div>
                     </div>
                     <div class="flex-1 min-w-0">
                       <div class="flex justify-between items-baseline mb-0.5">
-                        <h4 class="text-sm font-semibold text-gray-800 truncate group-hover:text-blue-700"><%= user.username %></h4>
-                        <span class="text-[10px] text-gray-400">10:30</span>
+                        <h4 class="text-sm font-semibold text-[#E0E0E0] truncate group-hover:text-[#FF6F00]"><%= user.username %></h4>
+                        <span class="text-[10px] text-[#A0A0A0]">10:30</span>
                       </div>
                     </div>
                   </div>
@@ -97,19 +97,19 @@
         <main class="flex-1 flex flex-col bg-slate-50 relative" id="chat--box">
             
             <!-- Header Chat (Opsional, nama user yang dipilih) -->
-            <div class="h-14 bg-white border-b border-gray-200 flex items-center px-6 justify-between shadow-sm">
+            <div class="h-14 bg-[#eb6600] border-b border-[#333] flex items-center px-6 justify-between shadow-sm">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-sm" id="activeUserAvatar">?</div>
                     <div>
-                        <h3 class="font-semibold text-gray-800" id="activeUserName">Pilih Pengguna</h3>
+                        <h3 class="font-semibold text-white" id="activeUserName">Pilih Pengguna</h3>
                         <p class="text-xs text-green-500 flex items-center gap-1" id="activeUserStatus"><span class="w-2 h-2 rounded-full bg-gray-300"></span> Offline</p>
                     </div>
                 </div>
-                <button class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                <button class="text-white hover:text-gray-300"><i class="fa-solid fa-ellipsis-vertical"></i></button>
             </div>
 
             <!-- Area Kotak Kosong (Chat History) -->
-            <div id="chatDisplay" class="flex-1 overflow-y-scroll p-6 space-y-4">
+            <div id="chatDisplay" class="flex-1 overflow-y-scroll p-6 space-y-4 bg-[#0D0D0D]">
                 <!-- Placeholder Kosong -->
                 <div class="h-full flex flex-col items-center justify-center text-gray-400 opacity-50">
                     <i class="fa-regular fa-paper-plane text-6xl mb-4"></i>
@@ -117,61 +117,126 @@
                 </div>
             </div>
 
-            <div id="attachmentMenu" class="hidden bg-gray-100 border-t border-gray-200 p-6 slide-up transition-all duration-300">
-                <div class="grid grid-cols-4 sm:grid-cols-6 gap-4 justify-items-center">
-                    <!-- Tombol Document -->
-                    <button class="flex flex-col items-center gap-2 group w-full">
-                        <div class="w-12 h-12 rounded-full bg-indigo-500 text-white flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition">
-                            <i class="fa-solid fa-file-lines"></i>
-                        </div>
-                        <span class="text-xs text-gray-600 font-medium">Dokumen</span>
-                    </button>
-                    <!-- Tombol Galeri -->
-                    <button class="flex flex-col items-center gap-2 group w-full">
-                        <div class="w-12 h-12 rounded-full bg-pink-500 text-white flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition">
-                            <i class="fa-solid fa-image"></i>
-                        </div>
-                        <span class="text-xs text-gray-600 font-medium">Galeri</span>
-                    </button>
-                    <!-- Tombol Kamera -->
-                    <button class="flex flex-col items-center gap-2 group w-full">
-                        <div class="w-12 h-12 rounded-full bg-rose-500 text-white flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition">
-                            <i class="fa-solid fa-camera"></i>
-                        </div>
-                        <span class="text-xs text-gray-600 font-medium">Kamera</span>
-                    </button>
-                    <!-- Tombol Lokasi -->
-                    <button class="flex flex-col items-center gap-2 group w-full">
-                        <div class="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition">
-                            <i class="fa-solid fa-location-dot"></i>
-                        </div>
-                        <span class="text-xs text-gray-600 font-medium">Lokasi</span>
-                    </button>
-                    <!-- Tombol Kontak -->
-                    <button class="flex flex-col items-center gap-2 group w-full">
-                        <div class="w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition">
-                            <i class="fa-solid fa-user"></i>
-                        </div>
-                        <span class="text-xs text-gray-600 font-medium">Kontak</span>
-                    </button>
-                    <!-- Tombol Audio -->
-                    <button class="flex flex-col items-center gap-2 group w-full">
-                        <div class="w-12 h-12 rounded-full bg-orange-500 text-white flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition">
-                            <i class="fa-solid fa-headphones"></i>
-                        </div>
-                        <span class="text-xs text-gray-600 font-medium">Audio</span>
-                    </button>
+            <div id="attachmentMenu" class="hidden bg-[#1E1E1E] border-t border-[#333333] p-6 slide-up transition-all duration-300">
+                <form id="uploadForm" class="space-y-6">
+
+                    <div class="grid grid-cols-4 sm:grid-cols-7 gap-4 justify-items-center">
+                        <!-- Tombol Document -->
+                        <button id="dropDocs" class="flex flex-col items-center gap-2 group w-full">
+                            <div class="w-12 h-12 rounded-full bg-[#3949AB] text-white flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition">
+                                <i class="fa-solid fa-file-lines"></i>
+                            </div>
+                            <span class="text-xs text-[#B0B0B0] font-medium">Dokumen</span>
+                        </button>
+                        <input 
+                            type="file" 
+                            id="docInput" 
+                            name="document" 
+                            class="hidden" 
+                            accept="application/*, text/*"
+                        >
+                        <!-- Tombol Galeri -->
+                        <button id="dropGly" class="flex flex-col items-center gap-2 group w-full">
+                            <div class="w-12 h-12 rounded-full bg-[#D81B60] text-white flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition">
+                                <i class="fa-solid fa-image"></i>
+                            </div>
+                            <span class="text-xs text-[#B0B0B0] font-medium">Galeri</span>
+                        </button>
+                        <input 
+                            type="file" 
+                            id="glyInput" 
+                            name="Galeri" 
+                            class="hidden" 
+                            accept="image/*, video/*"
+                        >
+                        <!-- Tombol Kamera -->
+                        <button class="flex flex-col items-center gap-2 group w-full">
+                            <div class="w-12 h-12 rounded-full bg-[#E53935] text-white flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition">
+                                <i class="fa-solid fa-camera"></i>
+                            </div>
+                            <span class="text-xs text-[#B0B0B0] font-medium">Kamera</span>
+                        </button>
+                        <!-- Tombol Lokasi -->
+                        <button class="flex flex-col items-center gap-2 group w-full">
+                            <div class="w-12 h-12 rounded-full bg-[#43A047] text-white flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <span class="text-xs text-[#B0B0B0] font-medium">Lokasi</span>
+                        </button>
+                        <!-- Tombol Kontak -->
+                        <button class="flex flex-col items-center gap-2 group w-full">
+                            <div class="w-12 h-12 rounded-full bg-[#1E88E5] text-white flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <span class="text-xs text-[#B0B0B0] font-medium">Kontak</span>
+                        </button>
+                        <!-- Tombol Audio -->
+                        <button id="dropAud" class="flex flex-col items-center gap-2 group w-full">
+                            <div class="w-12 h-12 rounded-full bg-[#F4511E] text-white flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition">
+                                <i class="fa-solid fa-headphones"></i>
+                            </div>
+                            <span class="text-xs text-[#B0B0B0] font-medium">Audio</span>
+                        </button>
+                        <input 
+                            type="file" 
+                            id="audInput" 
+                            name="audio" 
+                            class="hidden" 
+                            accept="audio/*"
+                        >
+                        <!-- Tombol Enben -->
+                        <button id="dropEnben" class="flex flex-col items-center gap-2 group w-full" onclick="attachmentBtn.classList.toggle('rotate-45');">
+                            <div class="w-12 h-12 rounded-full bg-[#546E7A] text-white flex items-center justify-center text-xl shadow-md group-hover:scale-110 transition">
+                                <i class="fa-solid fa-code"></i>
+                            </div>
+                            <span class="text-xs text-[#B0B0B0] font-medium">Enben</span>
+                        </button>
+                    </div>
+                    <input id="docSubmit" type="submit" class="hidden"/>
+                </form>
+            </div>
+
+            <div id="filePreview" class="hidden mt-4 bg-gray-50 border border-gray-200 rounded-lg p-3 flex items-center justify-between animate-fade-in">
+                <div class="flex items-center space-x-3 overflow-hidden">
+                    <div class="bg-white p-2 rounded shadow-sm text-indigo-600">
+                        <!-- Icon File -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    </div>
+                    <div class="flex flex-col min-w-0">
+                        <span id="fileName" class="text-sm font-medium text-gray-700 truncate block max-w-[180px]">Nama File...</span>
+                        <span id="fileSize" class="text-xs text-gray-500">0 KB</span>
+                    </div>
                 </div>
+                <button type="button" id="removeFileBtn" class="text-gray-400 hover:text-red-500 p-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg>
+                </button>
+            </div>
+            <div id="galeryPreview" class="hidden mt-4 bg-gray-50 border border-gray-200 rounded-lg p-3 flex items-center justify-between animate-fade-in">
+                <div class="w-20 h-20 rounded overflow-hidden border border-gray-200">
+                    <img src="" alt="preview" class="w-full h-full object-cover"/>
+                </div>
+                
+                <div class="flex-1 px-3">
+                    <p class="text-xs text-gray-500 truncate italic">Pratinjau Gambar</p>
+                    <div class="flex flex-col min-w-0">
+                        <span class="glyName text-sm font-medium text-gray-700 truncate block max-w-[180px]">Nama File...</span>
+                        <span class="glySize text-xs text-gray-500">0 KB</span>
+                    </div>
+                </div>
+            
+                <button type="button" id="removeGaleryBtn" class="text-gray-400 hover:text-red-500 p-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg>
+                </button>
             </div>
 
             <!-- Bagian Bawah: Input & Tombol Kirim -->
-            <div class="bg-white p-4 border-t border-gray-200">
+            <div class="bg-[#1E1E1E] p-4 border-t border-gray-200">
                 <form id="messageForm" class="flex gap-3 items-center" onsubmit="event.preventDefault()">
                     <div class="flex-1 relative">
                         <textarea 
                         id="messageInput"
                         rows="1" 
-                        class="w-full bg-gray-100 border-0 rounded-xl px-4 py-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:bg-white transition resize-none" 
+                        class="w-full bg-[#2C2C2C] border-0 rounded-xl px-4 py-3 text-[#E0E0E0] placeholder-[#757575] focus:ring-2 focus:ring-blue-500 focus:bg-white transition resize-none" 
                         placeholder="Ketik pesan Anda di sini..."></textarea>
                     </div>
                     <button 
@@ -182,8 +247,8 @@
                     </button>
                     <button 
                         type="submit" 
-                        class="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6 py-3 font-semibold shadow-lg shadow-blue-500/30 transition transform active:scale-95 flex items-center gap-2">
-                        <span><i id="btnSubmit" class="fa-solid fa-paper-plane"></i></span>
+                        class="bg-[#FF6F00] hover:bg-[#FFA000] text-white rounded-xl px-6 py-3 font-semibold shadow-lg shadow-orange-500/30 transition transform active:scale-95 flex items-center gap-2">
+                        <span><i id="btnSubmit" class="fa-solid fa-microphone"></i></span>
                     </button>
                 </form>
             </div>
@@ -209,13 +274,14 @@
         const hours = now.getHours()
         const minute = now.getMinutes()
 
-        sessionStorage.setItem('login', `${login}`)
+        localStorage.setItem('login', `${login}`)
         let isLogin = localStorage.getItem('login')
         // isLogin = Boolean(isLogin)
 
         function inLogin() {
             if (isLogin == 'true') {
                 console.log('hyyyy')
+                socket.emit('statuse', 'online')
             }
             else {
                 console.log('hecker')
@@ -223,6 +289,7 @@
             }
         }
         inLogin()
+
 
 
         const controlBar = document.getElementById('control-bar')
@@ -280,6 +347,148 @@
         // mediaQuery.addListener(toggleDevices)
         // toggleDevices()
 
+        const docInput = document.getElementById('docInput');
+        const dropDocs = document.getElementById('dropDocs');
+        const glyInput = document.getElementById('glyInput');
+        const dropGly = document.getElementById('dropGly');
+        const audInput = document.getElementById('audInput');
+        const dropAud = document.getElementById('dropAud');
+        const filePreview = document.getElementById('filePreview');
+        const galeryPreview = document.getElementById('galeryPreview');
+        const removeFileBtn = document.getElementById('removeFileBtn');
+        const removeGaleryBtn = document.getElementById('removeGaleryBtn');
+        const fileNameEl = document.getElementById('fileName');
+        const fileSizeEl = document.getElementById('fileSize');
+        const uploadForm = document.getElementById('uploadForm');
+        const docSubmit = document.getElementById('docSubmit');
+
+        let selectedFile = null;
+        let fileType = null;
+        let disableBtn = true
+
+        dropDocs.addEventListener('click', () => {
+            docInput.click()
+        })
+        dropGly.addEventListener('click', () => {
+            glyInput.click()
+        })
+        dropAud.addEventListener('click', () => {
+            audInput.click()
+        })
+        docInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                fileType = 'document'
+                handleFileSelect(e.target.files[0]);
+            }
+        })
+        glyInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                fileType = 'galery'
+                handleFileSelect(e.target.files[0]);
+            }
+        })
+        audInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                fileType = 'audio'
+                handleFileSelect(e.target.files[0]);
+            }
+        })
+
+        function handleFileSelect(file) {
+            selectedFile = file
+            fileNameEl.textContent = file.name;
+            fileSizeEl.textContent = (file.size / 1024).toFixed(1) + ' KB';
+
+            if (fileType === 'document') {
+                filePreview.classList.remove('hidden');
+            }
+            else if (fileType === 'galery') {
+                
+                const imgPreview = galeryPreview.querySelector('img')
+                const infoNama = galeryPreview.querySelector('.glyName');
+                const infoUkuran = galeryPreview.querySelector('.glySize');
+
+                if(infoNama) infoNama.textContent = file.name;
+                if(infoUkuran) infoUkuran.textContent = (file.size / 1024).toFixed(1) + ' KB';
+                
+                const reader = new FileReader()
+                reader.onload = (e) => {
+                    imgPreview.src = e.target.result
+
+                    galeryPreview.classList.remove('hidden');                    
+                }
+
+                reader.readAsDataURL(file)
+            }
+            fileUploadedData = {
+                name: file.name,
+                size: (file.size / 1024).toFixed(1) + ' KB'
+            }
+
+            attachmentMenu.classList.toggle('hidden');
+
+            disableBtn = false
+        }
+
+        removeFileBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Mencegah klik tembus ke form
+            resetForm();
+        });
+        removeGaleryBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            resetForm();
+        });
+
+        function resetForm() {
+            selectedFile = null;
+            docInput.value = ''; 
+            glyInput.value = '';
+            audInput.value = '';
+
+            filePreview.classList.add('hidden');
+            galeryPreview.classList.add('hidden');
+            fileUploadedData = null
+
+            disableBtn = true;
+        }
+
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Mencegah reload halaman
+            if (!selectedFile) return;
+
+            disableBtn = true;
+
+            const formData = new FormData();
+            formData.append('document', selectedFile);
+
+            try {
+                // Pastikan URL ini benar sesuai dengan endpoint Express Anda
+                const response = await fetch('/upload', { 
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error('Gagal Upload');
+
+                const result = await response.json();
+                console.log('Success:', result);
+
+                
+                // // Reset form setelah 2 detik
+                // setTimeout(() => {
+                //     resetForm();
+                // }, 2000);
+
+            } catch (error) {
+                console.error('Error:', error);
+                
+                // UI Error
+                disableBtn = false
+            }
+        });
+
+        let fileUploadedData = null;
+
 
         // Referensi Elemen
         const userListContainer = document.getElementById('userListContainer');
@@ -293,6 +502,7 @@
 
         const attachmentBtn = document.getElementById('attachmentBtn');
         const attachmentMenu = document.getElementById('attachmentMenu');
+
 
         attachmentBtn.addEventListener('click', () => {
             // Toggle visibility class
@@ -309,15 +519,22 @@
         });
 
         // --- 3. Fungsi Saat User Dipilih ---
-        function selectUser(user) {
+        function selectUser(user, ini) {
             // // Update Header
             activeUserName.textContent = user;
 
-            controlBar.classList.add('hidden')
-            chat_box.classList.remove('hidden')
+            const i = userListContainer.querySelectorAll('.i_u')
+            i.forEach(u => u.className = "group p-3 rounded-lg cursor-pointer hover:bg-[#252525] hover:border-l-2 hover:border-l-[#FF6F00] transition border border-transparent flex items-center gap-3 i_u")
+            ini.className = 'group p-3 rounded-lg cursor-pointer bg-[#252525] border-l-2 border-l-[#FF6F00] transition border border-transparent flex items-center gap-3 i_u'
+            // const s = i.querySelector('.status')
+            // socket.on("statusU", (statuse) => {
+            //     console.log("menambehkan status user sebagai: " + statuse)
+            //     s.classList.add(statuse)
+            // })
+
             
             chatDisplay.innerHTML = `
-                <div class="flex justify-center my-4"><span class="bg-gray-200 text-gray-500 text-xs px-3 py-1 rounded-full">Hari ini</span></div>
+                <div class="flex justify-center my-4"><span class="bg-neutral-800/30 backdrop-blur-lg text-[#888888] text-xs px-3 py-1 rounded-full">Hari ini</span></div>
                 <div id="chat-box" class="flex flex-col space-y-2">
                     <!-- Pesan Masuk Dummy -->
                     <!-- <div class="self-start bg-white border border-gray-200 rounded-lg rounded-tl-none py-2 px-4 max-w-sm shadow-sm">
@@ -342,38 +559,108 @@
                 history.pushState({ page: 'chat' }, '', '#chat');
                 showChatView();
             }
+            scrollToBottom()
         }
         socket.on("selectUser1", (data) => {
             console.log(data)
             loadData(data.mydb)
         })
 
+
+        let isEnbenMode = false
+        document.getElementById('dropEnben').addEventListener('click', () => {
+            isEnbenMode = !isEnbenMode
+            attachmentBtn.querySelector('i').classList.toggle('fa-paperclip')
+            attachmentBtn.querySelector('i').classList.toggle('fa-code')
+        })
         
 
         // // --- 4. Logika Kirim Pesan ---
-        messageForm.addEventListener('submit', function() {
-            const text = messageInput.value.trim();
-            if (text) {
-                const data = {
-                    myUser: myuser,
-                    userSelect: userSelect,
-                    message: {
-                        waktu: hours + ':' + minute,
-                        pengirim: myuser,
-                        message: text
-                    }
-                }
-                console.log('user di pilih')
-                socket.emit("message", data)
-                
-                messageInput.value = '';
-                chatDisplay.scrollTop = chatDisplay.scrollHeight;
+        messageForm.addEventListener('submit', async function(e) {
+            // 1. Tentukan Tipe Pesan
+            let type;
+            let text = messageInput.value.trim();
+            
+            // Cek prioritas: Document > Enben > Text
+            if (selectedFile && fileType == 'document') { 
+                type = 'document'; 
+            } else if (selectedFile && fileType == 'galery') { 
+                type = 'galery';
+            } else if (selectedFile && fileType == 'audio') { 
+                type = 'audio';  
+            } else if (isEnbenMode) { 
+                type = 'enben'; 
+            } else { 
+                type = 'text'; 
             }
+
+            // 2. Validasi agar tidak mengirim pesan kosong (kecuali file)
+            if (!text && type !== 'document' && type !== 'galery' && type !== 'audio') return;
+
+            // 3. LOGIKA UPLOAD FILE (Jika tipe document)
+            if (type === 'document' || type === 'galery' || type === 'audio') {
+                const formData = new FormData();
+                formData.append('document', selectedFile);
+
+                // Ubah icon tombol jadi loading (opsional)
+                btnSubmit.className = "fa-solid fa-spinner fa-spin";
+
+                try {
+                    // Await: Tunggu upload selesai dulu!
+                    const response = await fetch('/upload', { 
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) throw new Error('Gagal Upload');
+                    
+                    const result = await response.json();
+                    console.log('File uploaded:', result);
+                    
+                    fileUploadedData = result.data
+                    
+                } catch (error) {
+                    console.error('Error uploading:', error);
+                    alert("Gagal mengupload file.");
+                    btnSubmit.className = "fa-solid fa-paper-plane"; // Balikin icon
+                    return; // Stop, jangan kirim socket
+                }
+                
+                btnSubmit.className = "fa-solid fa-paper-plane"; // Balikin icon setelah sukses
+            }
+
+            // 4. KIRIM SOCKET (Setelah upload selesai atau jika hanya text)
+            const data = {
+                myUser: myuser,
+                userSelect: userSelect,
+                message: {
+                    waktu: new Date().getHours() + ':' + new Date().getMinutes(), // Update waktu realtime
+                    pengirim: myuser,
+                    typedata: type,
+                    // Jika document, kirim nama file. Jika text/enben kirim input text
+                    message: type === 'document' || type === 'galery' || type === 'audio' ? fileUploadedData : text 
+                }
+            };
+            console.log(fileUploadedData)
+
+            console.log('Sending message:', data);
+            socket.emit("message", data);
+
+            // 5. Reset UI
+            if (type === 'document' || type === 'galery') {
+                resetForm(); // Reset input file
+            } else {
+                messageInput.value = ''; // Reset input text
+            }
+            
+            chatDisplay.scrollTop = chatDisplay.scrollHeight;
+            scrollToBottom();
         });
         socket.on("message", (data) => {
             console.log(data)
             loadData(data.mydb)
-            userSelect(userSelect)
+            // selectUser(userSelect)
+            scrollToBottom()
         })
         
         function loadData(mydb) {
@@ -382,47 +669,241 @@
             let chatBox = document.getElementById('chat-box')
             chatBox.innerHTML = ''
             msg.forEach((a) => {
+
+                const chatColor = a.pengirim == myuser ? '#FF6F00' : '#2C2C2C'
+                const textColor = a.pengirim == myuser ? '#FFFFFF' : '#E0E0E0'
+                const timeColor = a.pengirim == myuser ? '#FFD180' : '#888888'
                 
                 const balon = document.createElement('div')
                 const balonChat = document.createElement('div')
-                if (a.pengirim == myuser) {
-                    balon.classList.add('flex', 'justify-end')
-                    balonChat.classList.add('bg-blue-600', 'text-white', 'p-3', 'rounded-2xl', 'rounded-tr-none', 'shadow-sm', 'max-w-[75%]')
-                    balonChat.innerHTML = `
-                    <p class="text-sm">${JSON.parse(JSON.stringify(a.message))}</p>
-                    <span class="text-xs text-blue-200 mt-1 block text-right">${JSON.parse(JSON.stringify(a.waktu))}</span>
-                    `
+
+                if (a.typedata == 'text') {
+                    if (a.pengirim == myuser) {
+                        balon.classList.add('flex', 'justify-end')
+                        balonChat.classList.add(`bg-[${chatColor}]`, `text-[${textColor}]`, 'p-3', 'rounded-2xl', 'rounded-tr-none', 'shadow-sm', 'max-w-[75%]')
+                        balonChat.innerHTML = `
+                        <p id="text-p" class="text-sm"></p>
+                        <span class="text-xs text-blue-200 mt-1 block text-right">${a.waktu}</span>
+                        `
+                    }
+                    else {
+                        balon.classList.add('flex', 'justify-start')
+                        balonChat.classList.add(`bg-[${chatColor}]`, `text-[${textColor}]`, 'p-3', 'rounded-2xl', 'rounded-tl-none', 'shadow-sm', 'max-w-[75%]')
+                        balonChat.innerHTML = `
+                        <p id="text-p" class="text-sm"></p>
+                        <span class="text-xs text-gray-400 mt-1 block">${a.waktu}</span>
+                        `
+                    }
+                    
+                    const textArea = balonChat.querySelector('p')
+                    textArea.textContent = a.message
                 }
-                else {
-                    balon.classList.add('flex', 'justify-start')
-                    balonChat.classList.add('bg-white', 'text-gray-800', 'p-3', 'rounded-2xl', 'rounded-tl-none', 'shadow-sm', 'max-w-[75%]')
-                    balonChat.innerHTML = `
-                    <p class="text-sm">${JSON.parse(JSON.stringify(a.message))}</p>
-                    <span class="text-xs text-gray-400 mt-1 block">${JSON.parse(JSON.stringify(a.waktu))}</span>
-                    `
+                if (a.typedata == 'enben') {
+                    if (a.pengirim == myuser) {
+                        balon.classList.add('flex', 'justify-end')
+                        balonChat.classList.add(`bg-[${chatColor}]`, `text-[${textColor}]`, 'p-3', 'rounded-2xl', 'rounded-tr-none', 'shadow-sm', 'max-w-[75%]')
+                        balonChat.innerHTML = `
+                        <p class="text-sm">${a.message}</p>
+                        <span class="text-xs text-blue-200 mt-1 block text-right">${a.waktu}</span>
+                        `
+                    }
+                    else {
+                        balon.classList.add('flex', 'justify-start')
+                        balonChat.classList.add(`bg-[${chatColor}]`, `text-[${textColor}]`, 'p-3', 'rounded-2xl', 'rounded-tl-none', 'shadow-sm', 'max-w-[75%]')
+                        balonChat.innerHTML = `
+                        <p class="text-sm">${a.message}</p>
+                        <span class="text-xs text-gray-400 mt-1 block">${a.waktu}</span>
+                        `
+                    }
                 }
+                if (a.typedata == 'document') {
+                    if (a.pengirim == myuser) {
+                        balon.classList.add('flex', 'justify-end')
+                        balonChat.classList.add(`bg-[${chatColor}]`, `text-[${textColor}]`, 'p-2', 'rounded-xl', 'rounded-tr-none', 'shadow-sm', 'max-w-[75%]')
+                        balonChat.innerHTML = `
+                        <div class="mt-1 bg-gray-50 border border-gray-200 rounded-lg p-3 flexitems-center justify-between animate-fade-in">
+                            <div class="flex items-center space-x-3 overflow-hidden">
+                                <div class="bg-white p-2 rounded shadow-sm text-indigo-600">
+                                    <!-- Icon File -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                                </div>
+                                <div class="flex flex-col min-w-0">
+                                    <span id="fileName" class="text-sm font-medium text-gray-700 truncate block max-w-[180px]">${a.message.filename}</span>
+                                    <span id="fileSize" class="text-xs text-gray-500">${konversiUkuran(a.message.size)}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="text-xs text-gray-400 mt-1 block">${a.waktu}</span>
+                        `
+                    }
+                    else {
+                        balon.classList.add('flex', 'justify-start')
+                        balonChat.classList.add(`bg-[${chatColor}]`, `text-[${textColor}]`, 'p-2', 'rounded-xl', 'rounded-tl-none', 'shadow-sm', 'max-w-[75%]')
+                        balonChat.innerHTML = `
+                        <div class="mt-1 bg-gray-50 border border-gray-200 rounded-lg p-3 flexitems-center justify-between animate-fade-in">
+                            <a href="${a.message.url}" download="${a.message.filename}">
+                                <div class="flex items-center space-x-3 overflow-hidden">
+                                    <div class="bg-white p-2 rounded shadow-sm text-indigo-600">
+                                        <!-- Icon File -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                                    </div>
+                                    <div class="flex flex-col min-w-0">
+                                        <span id="fileName" class="text-sm font-medium text-gray-700 truncate block max-w-[180px]">${a.message.filename}</span>
+                                        <span id="fileSize" class="text-xs text-gray-500">${konversiUkuran(a.message.size)}</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <span class="text-xs text-gray-400 mt-1 block">${a.waktu}</span>
+                        `
+                    }
+                }
+                if (a.typedata == 'galery') {
+                    const fileUrl = a.message.url;
+                    const isMe = a.pengirim == myuser;
+                    
+                    // Cek apakah tipe konten adalah video atau gambar
+                    const isVideo = a.message.mimeType && a.message.mimeType.startsWith('video');
+
+                    balon.classList.add('flex', isMe ? 'justify-end' : 'justify-start');
+                    balonChat.classList.add(
+                        `bg-[${chatColor}]`, 
+                        'p-2', 'rounded-xl', 'shadow-sm', 'max-w-[75%]',
+                        isMe ? 'rounded-tr-none' : 'rounded-tl-none'
+                    );
+
+                    // Tentukan elemen media berdasarkan tipe file
+                    let mediaHtml = '';
+                    if (isVideo) {
+                        mediaHtml = `
+                            <video controls class="rounded-lg w-full max-h-[300px] bg-black">
+                                <source src="${fileUrl}" type="${a.message.mimeType + '/' + a.message.format}">
+                                Your browser does not support the video tag.
+                            </video>`;
+                    } else {
+                        mediaHtml = `
+                            <img src="${fileUrl}" 
+                                class="rounded-lg cursor-pointer w-full max-h-[300px] object-cover" 
+                                onclick="window.open('${fileUrl}', '_blank')">`;
+                    }
+
+                    balonChat.innerHTML = `
+                        ${mediaHtml}
+                        <span class="text-xs ${isMe ? 'text-blue-200' : 'text-gray-400'} mt-1 block ${isMe ? 'text-right' : ''}">${a.waktu}</span>
+                    `;
+                }
+                if (a.typedata === 'audio') {
+                    const fileUrl = a.message.url;
+                    const isMe = a.pengirim == myuser;
+
+                    balon.classList.add('flex', isMe ? 'justify-end' : 'justify-start');
+                    balonChat.classList.add(
+                        `bg-[${chatColor}]`, 
+                        'p-2', 'rounded-xl', 'shadow-sm', 'max-w-[75%]',
+                        isMe ? 'rounded-tr-none' : 'rounded-tl-none'
+                    );
+
+                    balonChat.innerHTML = `
+                    <audio src="${fileUrl}"></audio>
+                    <div class="flex items-center gap-3 m-1">
+                        <button class="btn-play w-10 h-10 flex-shrink-0 rounded-full ${isMe ? 'bg-white text-black' : 'bg-orange-500 text-white'} flex items-center justify-center shadow-sm transition active:scale-90">
+                            <i class="fa fa-play ml-0.5"></i>
+                        </button>
+                        
+                        <div class="flex-1 flex flex-col gap-1">
+                            <input type="range" class="w-full audio-slider h-1.5 accent-current cursor-pointer appearance-none rounded-lg bg-gray-300/50" value="0" min="0" max="100">
+                            <div class="flex justify-between items-center">
+                                <span class="time-current text-[10px] ${isMe ? 'text-orange-100' : 'text-gray-500'} font-medium">00:00</span>
+                                <i class="fa-solid fa-waveform text-[10px] ${isMe ? 'text-orange-200' : 'text-gray-400'}"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="text-[10px] ${isMe ? 'text-blue-200' : 'text-gray-400'} mt-1 block text-right">${a.waktu}</span>
+                    `
+                    let audio = balonChat.querySelector('audio')
+                    let playPauseButton= balonChat.querySelector('i')
+                    let timeline = balonChat.querySelector('input')
+                    let currentTimeSpan = balonChat.querySelector('span')
+
+                    audio.addEventListener('loadedmetadata', () => {
+                        timeline.max = audio.duration;
+                    });
+                    audio.addEventListener('timeupdate', () => {
+                        timeline.value = audio.currentTime / audio.duration * 100;
+                        currentTimeSpan.textContent = formatTime(audio.currentTime)
+                    })
+                    timeline.addEventListener('input', () => {
+                        const time = ( timeline.value / 100 ) * audio.duration
+                        currentTimeSpan.textContent = formatTime(time)
+                    })
+
+                    function formatTime(time) {
+                        const minutes = Math.floor(time / 60);
+                        const seconds = Math.floor(time % 60);
+                        return `${padZero(minutes)}:${padZero(seconds)}`
+                    }
+                    function padZero(number) {
+                        return (number < 10 ? '0' : '') + number
+                    }
+                    function updatePlayPauseIcon() {
+                        if (audio.paused) {
+                            playPauseButton.classList.remove('fa-pause');
+                            playPauseButton.classList.add('fa-play');
+                        } 
+                        else {
+                            playPauseButton.classList.remove('fa-play');
+                            playPauseButton.classList.add('fa-pause');
+                        }
+                    }
+                    playPauseButton.addEventListener('click', () => {
+                        if (audio.paused) {
+                            audio.play();
+                        } 
+                        else {
+                            audio.pause();
+                        }
+                    });
+                    // Ini akan terpanggil saat audio.play() berhasil
+                    audio.addEventListener('play', updatePlayPauseIcon)
+                    // Ini akan terpanggil saat audio.pause() berhasil
+                    audio.addEventListener('pause', updatePlayPauseIcon)
+                    // Ini akan terpanggil saat audio selesai diputar
+                    audio.addEventListener('ended', () => { updatePlayPauseIcon; foreback('fore') })
+                    // Atur icon yang benar saat halaman pertama kali dimuat
+                    updatePlayPauseIcon();
+
+                }
+
                 balon.appendChild(balonChat)
                 chatBox.appendChild(balon)
             })
 
         }
 
+        function konversiUkuran(uk_B) {
+            if (uk_B < 1024) {
+                return `${uk_B} B`
+            } else if (uk_B < 1024 ** 2) {
+                return `${(uk_B / 1024).toFixed(2)} KB`
+            } else if (uk_B < 1024 ** 3) {
+                return `${(uk_B / 1024 ** 2).toFixed(2)} MB`
+            } else if (uk_B < 1024 ** 4) {
+                return `${(uk_B / 1024 ** 3).toFixed(2)} GB`
+            } else {
+                return `${(uk_B / 1024 ** 4).toFixed(2)} TB`
+            }
+        }
+
         window.onload = function() {
-            var objDiv = document.getElementById("chatDisplay");
-            // Mengatur posisi scroll vertical (scrollTop) ke tinggi total konten (scrollHeight)
-            objDiv.scrollTop = objDiv.scrollHeight;
+            if (window.innerWidth < 750) {
+                showListView()
+            }
         }
 
         function scrollToBottom() {
-            // 1. Ambil elemen wadah
-            const chatBox = document.getElementById('chat-box');
-
-            // 2. Gunakan properti scrollHeight untuk menemukan posisi paling bawah
-            // chatBox.scrollTop = chatBox.scrollHeight;
-            
-            // Opsi Smooth Scroll (dengan animasi halus)
-            chatBox.scrollTo({
-                top: chatBox.scrollHeight,
+            const chatDisplay = document.getElementById('chatDisplay');
+            chatDisplay.scrollTo({
+                top: chatDisplay.scrollHeight,
                 behavior: 'smooth' 
             });
         }
@@ -444,7 +925,9 @@
             }
         });
 
-
+        messageInput.addEventListener('input', () => {
+            btnSubmit.className = messageInput.value.trim() == '' ? 'fa-solid fa-microphone' : 'fa-solid fa-paper-plane'
+        })
 
         // // Jalankan render awal
         // renderUserList();
