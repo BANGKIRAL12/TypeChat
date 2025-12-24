@@ -33,7 +33,7 @@ const io = new Server(server);
 require('dotenv').config();
 
 app.set("view engine", "ejs")
-app.set("views", "views")
+app.set('views', path.join(__dirname, 'views'));
 
 app.use(cors());
 app.use('/uploads', express.static('database/uploads'));
@@ -394,3 +394,4 @@ io.on("connection", (socket) => {
 server.listen(3300, () => {
    console.log(chalk.blue(log.info("server berjalan di: 'http://localhost:3300'")))
 });
+
